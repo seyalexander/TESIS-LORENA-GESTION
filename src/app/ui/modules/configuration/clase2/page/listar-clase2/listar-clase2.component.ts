@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, NgModule, ViewChild } from '@angular/core';
 import { Clase2Model } from '../../../../../../domain/models/clase2/clase2.model';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
@@ -7,11 +7,12 @@ import { AuthService } from '../../../../../../infraestructure/driven-adapter/lo
 import { Clase2Service } from '../../../../../../infraestructure/driven-adapter/clase2/clase2.service';
 import { clase2respuestaModel } from '../../../../../../domain/models/clase2/clase2respuesta.model';
 import { alumnoModel } from '../../../../../../domain/models/alumno/alumno.model';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-listar-clase2',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './listar-clase2.component.html',
   styleUrl: './listar-clase2.component.css'
 })
@@ -29,13 +30,20 @@ export class ListarClase2Component {
   mostrarModal: boolean = false;
   respuestaSeleccionada: string = '';
   correcta: string = '';
+  mostrarFormulario: boolean = false;
+
+  nuevoAudio: string = '';
+  nuevaOpcion1: string = '';
+  nuevaOpcion2: string = '';
+  nuevaOpcion3: string = '';
+  nuevaOpcion4: string = '';
+  nuevaCorrecta: string = '';
 
   private audiosSubscription: Subscription | undefined;
 
   constructor(
     private _getAudiosUseCase: Clase2Service,
-    private router: Router,
-    private _login: AuthService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -43,7 +51,6 @@ export class ListarClase2Component {
   }
 
   ngAfterViewInit(): void {
-    // Asegúrate de que el audio se cargue después de la vista esté inicializada
     if (this.audioSource) {
       this.reproducirAudio();
     }
@@ -57,8 +64,6 @@ export class ListarClase2Component {
         this.audioSource = this.formatDropboxUrl(item.audio);
         this.mezclarOpciones(item);
         this.reproducirAudio();
-        console.log(this.audioSource);
-
       }
     });
   }
@@ -66,7 +71,7 @@ export class ListarClase2Component {
   mezclarOpciones(item: Clase2Model) {
     const opciones = [item.opcion1, item.opcion2, item.opcion3, item.opcion4];
     this.opcionesMezcladas = this.shuffleArray(opciones);
-    this.correcta = item.correcta; // Guardar la respuesta correcta
+    this.correcta = item.correcta;
   }
 
   shuffleArray(array: string[]): string[] {
@@ -94,10 +99,7 @@ export class ListarClase2Component {
     this.respuestaSeleccionada = opcionSeleccionada;
     const respuesta = opcionSeleccionada === this.correcta ? 'correcta' : 'incorrecta';
 
-    // Aquí llamas a la función para guardar la respuesta
     this.saveRespuesta(respuesta);
-
-    // Mostrar modal de respuesta enviada
     this.mostrarModal = true;
   }
 
@@ -105,16 +107,39 @@ export class ListarClase2Component {
     const respuestaModel = new clase2respuestaModel();
     respuestaModel.idclaserespuestasctividad1 = 1; // O el ID correcto
     respuestaModel.respuesta = respuesta;
-    respuestaModel.idalumnofk = {} as alumnoModel; // O el alumno correcto
+    respuestaModel.idalumnofk = {} as alumnoModel;
 
-    // Suponiendo que tienes un servicio para enviar la respuesta
     this._getAudiosUseCase.saveClase2(respuestaModel).subscribe(() => {
-      // Redirigir a otra página o realizar cualquier otra acción después de guardar
       this.volverOpcionesClase();
     });
   }
 
   volverOpcionesClase(): void {
     this.router.navigateByUrl('/home/opcionesClase');
+  }
+
+  abrirFormularioRegistro(): void {
+    this.mostrarFormulario = true;
+  }
+
+  cerrarFormularioRegistro(): void {
+    this.mostrarFormulario = false;
+  }
+
+  registrarNuevoElemento(): void {
+    const nuevoElemento: Clase2Model = {
+      audio: this.nuevoAudio,
+      opcion1: this.nuevaOpcion1,
+      opcion2: this.nuevaOpcion2,
+      opcion3: this.nuevaOpcion3,
+      opcion4: this.nuevaOpcion4,
+      correcta: this.nuevaCorrecta,
+      idclaseActividad1: 0 // O el ID correcto si es necesario
+    };
+
+    this._getAudiosUseCase.saveClase2reg(nuevoElemento).subscribe(() => {
+      this.cerrarFormularioRegistro();
+      this.listarAudios();
+    });
   }
 }

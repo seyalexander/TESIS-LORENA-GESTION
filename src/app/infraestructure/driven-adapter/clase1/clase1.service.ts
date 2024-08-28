@@ -16,4 +16,8 @@ export class Clase1Service {
   listAudios(): Observable<Clase1Model[]>{
     return this.http.get<Clase1Model[]>(`${this.url}/MostrarClase1`)
   }
+
+  registrarAudios(audios: Clase1Model): Observable<object>{
+    return this.http.post(`${this.url}/InsertarClase1`, audios)
+  }
 }

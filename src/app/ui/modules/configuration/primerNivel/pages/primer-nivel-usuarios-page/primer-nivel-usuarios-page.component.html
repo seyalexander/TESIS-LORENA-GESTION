@@ -1,34 +1,49 @@
 <body class="custom-bg min-h-screen flex flex-col items-center py-10 relative">
-  <!-- Encabezado del Usuario -->
-  <div class="absolute top-4 left-4 flex items-center glass-effect p-3 rounded-full shadow-md z-20">
+
+  <div class="absolute top-4 left-4 flex items-center glass-effect p-3 rounded-full shadow-md">
     <img [src]="loggedInUser.avatar" alt="User Avatar" class="w-10 h-10 rounded-full mr-3">
     <span class="text-lg font-semibold text-white">{{ loggedInUser.username }}</span>
   </div>
 
-  <!-- Botón de Salir -->
-  <button
-    (click)="volverOpcionesClase()"
-    class="absolute top-4 right-4 py-2 px-4 bg-white bg-opacity-30 text-white font-semibold rounded-full shadow-md hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-purple-500 glass-effect z-90">
+  <button (click)="volverOpcionesClase()" class="absolute top-4 right-4 py-2 px-4 bg-white bg-opacity-30 text-white font-semibold rounded-full shadow-md hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-purple-500 glass-effect">
     Back
   </button>
 
-  <!-- Título -->
-  <h1 class="text-4xl font-bold text-yellow-500 mb-10 z-10">Choose a flashcard</h1>
+  <h1 class="text-4xl font-bold text-yellow-500 mb-10">Choose a flashcard</h1>
 
-  <!-- Grid de Flashcards -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl w-full px-6 z-10">
-    <div *ngFor="let item of datosAudioslista"
-      class="custom-card-bg p-6 rounded-lg shadow-lg flex flex-col items-center cursor-pointer transform hover:scale-105 transition-transform"
-      (click)="reproducirAudio(item.audio)">
-      <img src="https://img.freepik.com/foto-gratis/personaje-dibujos-animados-3d_23-2151021951.jpg?w=740&t=st=1721970629~exp=1721971229~hmac=34636ad2e1c093c5ea2e4f8d607497a9a38ac1da229a7d21359135735b3eda43"
-        alt="Imagen 1"
-        class="w-32 h-32 mb-4 rounded-full">
+  <button (click)="openModal()" class="mb-6 py-2 px-4 bg-green-500 text-white font-semibold rounded-full shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+    Register New Audio
+  </button>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl w-full px-6">
+    <div *ngFor="let item of datosAudioslista" class="custom-card-bg p-6 rounded-lg shadow-lg flex flex-col items-center cursor-pointer transform hover:scale-105 transition-transform" (click)="reproducirAudio(item.audio)">
+      <img src="https://img.freepik.com/foto-gratis/personaje-dibujos-animados-3d_23-2151021951.jpg?w=740&t=st=1721970629~exp=1721971229~hmac=34636ad2e1c093c5ea2e4f8d607497a9a38ac1da229a7d21359135735b3eda43" alt="Imagen 1" class="w-32 h-32 mb-4 rounded-full">
     </div>
   </div>
 
   <!-- Reproductor de Audio -->
-  <audio #audioPlayer controls class="mt-4 z-10">
+  <audio #audioPlayer controls class="w-full max-w-lg">
     <source [src]="audioSource" type="audio/mpeg">
+    Your browser does not support the audio element.
   </audio>
-</body>
 
+  <!-- Modal -->
+  <div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+      <h2 class="text-xl font-bold mb-4">Register New Audio</h2>
+      <form (ngSubmit)="onSubmit()" #audioForm="ngForm">
+        <div class="mb-4">
+          <label for="audioFileType" class="block text-gray-700">Audio URL</label>
+          <input type="text" id="audioFileType" [(ngModel)]="newAudio.audio" name="audioFileType" required class="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1">
+        </div>
+        <button type="submit" class="py-2 px-4 bg-blue-500 text-white font-semibold rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          Submit
+        </button>
+        <button type="button" (click)="closeModal()" class="py-2 px-4 bg-red-500 text-white font-semibold rounded-full shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 mt-4">
+          Cancel
+        </button>
+      </form>
+    </div>
+  </div>
+
+</body>

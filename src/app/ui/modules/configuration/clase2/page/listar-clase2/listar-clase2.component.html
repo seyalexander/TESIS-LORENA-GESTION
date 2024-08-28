@@ -1,44 +1,52 @@
-<body class="custom-bg min-h-screen flex flex-col items-center py-10 relative">
-  <!-- Encabezado del Usuario -->
-  <div class="absolute top-4 left-4 flex items-center glass-effect p-3 rounded-full shadow-md z-20">
-    <img [src]="loggedInUser.avatar" alt="User Avatar" class="w-10 h-10 rounded-full mr-3">
-    <span class="text-lg font-semibold text-white">{{ loggedInUser.username }}</span>
-  </div>
-
-  <!-- Botón de Salir -->
-  <button
-    (click)="volverOpcionesClase()"
-    class="absolute top-4 right-4 py-2 px-4 bg-white bg-opacity-30 text-white font-semibold rounded-full shadow-md hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-purple-500 glass-effect z-90">
-    Back
+<div class="drawing-container relative min-h-screen bg-gradient-to-r from-purple-900 via-purple-700 to-purple-500 flex flex-col items-center py-10">
+  <!-- Botón para abrir el formulario -->
+  <button (click)="abrirFormularioRegistro()" class="py-2 px-4 bg-blue-500 text-white font-semibold rounded-full">
+    Abrir Formulario de Registro
   </button>
 
-  <!-- Título -->
-  <h1 class="text-4xl font-bold text-yellow-500 mb-10 z-10">Choose a flashcard</h1>
+  <!-- Formulario de registro -->
+  <div *ngIf="mostrarFormulario" class="mt-4 p-6 bg-gray-100 rounded-lg shadow-md">
+    <h2 class="text-lg font-bold mb-4">Formulario de Registro</h2>
 
-  <!-- Reproductor de Audio -->
-  <audio #audioPlayer controls class="mb-6 z-10">
-    <source [src]="audioSource" type="audio/mpeg">
-  </audio>
+    <!-- Campos del formulario -->
+    <div class="mb-4">
+      <label for="audio" class="block text-sm font-medium text-gray-700">Audio URL</label>
+      <input id="audio" type="text" [(ngModel)]="nuevoAudio" class="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Ingrese la URL del audio">
+    </div>
 
-  <!-- Grid de Flashcards -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl w-full px-6 z-10">
-    <div
-      *ngFor="let opcion of opcionesMezcladas"
-      class="custom-card-bg p-6 rounded-lg shadow-lg flex flex-col items-center cursor-pointer transform hover:scale-105 transition-transform"
-      (click)="verificarRespuesta(opcion)">
-      <img src="https://img.freepik.com/foto-gratis/personaje-dibujos-animados-3d_23-2151021951.jpg?w=740&t=st=1721970629~exp=1721971229~hmac=34636ad2e1c093c5ea2e4f8d607497a9a38ac1da229a7d21359135735b3eda43"
-        alt="Imagen"
-        class="w-32 h-32 mb-4 rounded-full">
-      <h2>{{ opcion }}</h2>
+    <div class="mb-4">
+      <label for="opcion1" class="block text-sm font-medium text-gray-700">Opción 1</label>
+      <input id="opcion1" type="text" [(ngModel)]="nuevaOpcion1" class="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Ingrese la opción 1">
+    </div>
+
+    <div class="mb-4">
+      <label for="opcion2" class="block text-sm font-medium text-gray-700">Opción 2</label>
+      <input id="opcion2" type="text" [(ngModel)]="nuevaOpcion2" class="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Ingrese la opción 2">
+    </div>
+
+    <div class="mb-4">
+      <label for="opcion3" class="block text-sm font-medium text-gray-700">Opción 3</label>
+      <input id="opcion3" type="text" [(ngModel)]="nuevaOpcion3" class="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Ingrese la opción 3">
+    </div>
+
+    <div class="mb-4">
+      <label for="opcion4" class="block text-sm font-medium text-gray-700">Opción 4</label>
+      <input id="opcion4" type="text" [(ngModel)]="nuevaOpcion4" class="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Ingrese la opción 4">
+    </div>
+
+    <div class="mb-4">
+      <label for="correcta" class="block text-sm font-medium text-gray-700">Opción Correcta</label>
+      <input id="correcta" type="text" [(ngModel)]="correcta" class="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Ingrese la opción correcta">
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="flex justify-end">
+      <button (click)="registrarNuevoElemento()" class="py-2 px-4 bg-green-500 text-white font-semibold rounded-full mr-2">
+        Registrar
+      </button>
+      <button (click)="cerrarFormularioRegistro()" class="py-2 px-4 bg-red-500 text-white font-semibold rounded-full">
+        Cancelar
+      </button>
     </div>
   </div>
-
-  <!-- Modal de Respuesta Enviada -->
-  <div *ngIf="mostrarModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-      <h2 class="text-lg font-bold mb-4">Respuesta Enviada</h2>
-      <p class="mb-4">Tu respuesta {{ respuestaSeleccionada }} ha sido enviada.</p>
-      <button (click)="volverOpcionesClase()" class="py-2 px-4 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-600">Aceptar</button>
-    </div>
-  </div>
-</body>
+</div>

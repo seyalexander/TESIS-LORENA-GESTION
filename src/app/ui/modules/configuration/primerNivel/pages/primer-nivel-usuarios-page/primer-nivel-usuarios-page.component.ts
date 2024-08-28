@@ -3,13 +3,14 @@ import { Clase1Model } from '../../../../../../domain/models/clase1/clase.modul'
 import { Clase1Service } from '../../../../../../infraestructure/driven-adapter/clase1/clase1.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Route, Router } from '@angular/router';
 import { AuthService } from '../../../../../../infraestructure/driven-adapter/login/auth.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-primer-nivel-usuarios-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule, ReactiveFormsModule],
   templateUrl: './primer-nivel-usuarios-page.component.html',
   styleUrls: ['./primer-nivel-usuarios-page.component.css']
 })
@@ -23,13 +24,14 @@ export class PrimerNivelUsuariosPageComponent {
 
   datosAudioslista: Clase1Model[] = [];
   audioSource: string | undefined;
+  isModalOpen = false;
+  newAudio: Clase1Model = new Clase1Model();
 
   private audiosSubscription: Subscription | undefined;
 
   constructor(
     private _getAudiosUseCase: Clase1Service,
-    private router: Router,
-    private _login: AuthService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -51,6 +53,32 @@ export class PrimerNivelUsuariosPageComponent {
     audioElement.src = this.audioSource;
     audioElement.load();
     audioElement.play();
+  }
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  onSubmit() {
+    if (this.newAudio.audio) {
+      this._getAudiosUseCase.registrarAudios(this.newAudio).subscribe(response => {
+        console.log('Audio registrado con éxito:', response);
+        this.listarAudios();
+        this.closeModal();
+        this.resetForm();  // Llamada para reiniciar el formulario
+      }, error => {
+        console.error('Error al registrar el audio:', error);
+      });
+    }
+  }
+
+  // Método para reiniciar el formulario
+  resetForm() {
+    this.newAudio = new Clase1Model();  // Resetea el objeto newAudio a su estado inicial
   }
 
   volverOpcionesClase(): void {

@@ -22,4 +22,8 @@ export class Clase2Service extends Clase2Gateway{
   override saveClase2(clase2: clase2respuestaModel): Observable<Object> {
     return this.http.post(`${this.url}/InsertarRespuestasClaseActividad1`,clase2)
   }
+
+  override saveClase2reg(clase2: Clase2Model): Observable<Object> {
+    return this.http.post(`${this.url}/InsertarActividad1`,clase2)
+  }
 }
