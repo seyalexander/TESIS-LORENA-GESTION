@@ -50,9 +50,9 @@ export const routes: Routes = [
         component: SegundoNivelUsuariosPageComponent,
       },
       {
-        path: 'actividad2',
+        path: 'actividad4',
         pathMatch: 'full',
-        component: SegundoNivelUsuariosPageComponent,
+        component: Nivel4Component,
       },
       {
         path: 'actividad3',

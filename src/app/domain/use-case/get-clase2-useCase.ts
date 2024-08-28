@@ -19,4 +19,6 @@ export class GetClase2UseCases {
   getAllClase2 () : Observable <object> {
     return this._clase2GateWay.getAllClase2();
   }
+
+
 }
